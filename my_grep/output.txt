@@ -1,0 +1,5 @@
+查询字符串:body
+查询文件:poem.txt
+result:/I'm nobody! Who are you?
+result:/Are you nobody, too?
+result:/How dreary to be somebody!

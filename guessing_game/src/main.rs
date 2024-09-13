@@ -1,126 +1,62 @@
-// use std::{cmp::Ordering, io};
+use std::{collections::HashMap, fs::File, string};
 
-// use rand::Rng;
+use crate::garden::vegetables::asparagus::add_two;
 
+mod garden;
 
-fn first_word(s: &String) -> &str {
-    let bytes = s.as_bytes();
-    // let tem_str: &str;
-    for (i,&item) in bytes.iter().enumerate() {
-        if item == b' ' {
-            // tem_str = &s[0..i];
-            // return tem_str.to_string();
-            return &s[0..i];
-        }
+/**
+ * 给定一系列数字，使用 vector 并返回这个列表的中位数（排列数组后位于中间的值）和众数（mode，出现次数最多的值；这里哈希 map 会很有帮助）。
+ */
+fn calculate_median_and_mode(numbers: Vec<i32>){
+    let len: usize = numbers.len();
+    
+    let mut sorted_numbers = numbers.clone();
+    sorted_numbers.sort_unstable();
+
+    let median = if len % 2 == 1 {
+        Some(sorted_numbers[len / 2])
+    }else{
+        Some((sorted_numbers[len / 2 - 1] + sorted_numbers[len / 2]) / 2)
+    };
+
+    println!("the median number is:{}",median.unwrap());
+
+    let mut count_map = HashMap::new();
+    for &number in &sorted_numbers {
+        *count_map.entry(number).or_insert(0) += 1;
     }
-    // tem_str = &s[..];
-    // return tem_str.to_string();
-    return &s[..];
-}
 
-# [derive(Debug)]
-struct Rectangle {
-    width:u32,
-    height:u32,
-}
-
-# [derive(Debug)]
-enum IpAddr {
-    V4(String),
-    V6(String)
+    let mode = count_map.iter().max_by_key(|&(_,&count)| count).map(|(&num,_)| num);
+    println!("the mode is:{}",mode.unwrap());
 }
 
 fn main() {
+    // let numbers = vec![1,4,5,2,3,2,5,6,3,8,5];
+    // calculate_median_and_mode(numbers);
 
-    let mut s = String::from("hello world");
+    // let greeting_file_result = File::open("hello.txt");
 
-    let str: String = first_word(&s).to_string();
+    // let greeting_file = match greeting_file_result {
+    //     Ok(file) => file,
+    //     Err(error) => panic!("Problem opening the file: {error:?}"),
+    // };
+    let num1 = 32;
+    let num2 = 12;
+    let num3 = num1 + num2;
+    println!("app");
 
-    // clone引用得到的依然是引用，不会创建新的字符串
-    // let str: &str = first_word(&s).clone();
-    s.clear();
-    println!("{}",str);
+    let string1 = String::from("abcd");
+    let string2 = "xyz";
 
-    let s1 = "sfaf";
-    let s2 = s1.to_string();
-    println!("{},{}",s1,s2);
-
-    let tt = (1,2,3);
-    println!("{}",tt.1);
-
-    let mut rect: Rectangle = Rectangle {
-        width:20,
-        height:30,
-    };
-    println!("{:#?}",rect);
-    rect.width = 30;
-    println!("{:#?}",rect);
-
-    
-    let home = IpAddr::V4(String::from("127.0.0.1"));
-    println!("{home:#?}");
-
-    struct IpStruct {
-        ip:IpAddr,
-        address:String
-    }
-    let ips = IpStruct {
-        ip:IpAddr::V4(String::from("hhhh")),
-        address:String::from("sdpfasf")
-    };
-    
-    let dice_roll = 9;
-    match dice_roll {
-        3 => 2,
-        7 => 1,
-        other => other
-    };
-
-    let x = Some(1);
-    match x {
-        Some(i) => Some(i + 1),
-        None => None
-    };
-
-
-    // let mut s = String::from("hello");
-
-    // let r1 = &s; // 没问题
-    // let r2 = &s; // 没问题
-    // println!("{} and {}", r1, r2);
-    
-    // let r3 = &mut s;
-    // println!("{}", r3);
-
-    // println!("输入值{}",b' ');
-
-    // let secret_number: u32 = rand::thread_rng().gen_range(1..=5);
-    // println!("随机数为：{secret_number}");
-
-    // loop {
-    //     let mut guess: String = String::new();
-    //     println!("请输入你的猜测：");
-    //     io::stdin().read_line(&mut guess).expect("出错啦");
-
-    //     let guess: u32 = match guess.trim().parse() {
-    //         Err(_) => continue,
-    //         Ok(num) => num
-    //     } ;
-    //     println!("你输入的是：{}", guess);
-    //     match guess.cmp(&secret_number) {
-    //         Ordering::Greater => {
-    //             println!("太大了");
-    //             println!("--------------");
-    //         },
-    //         Ordering::Less => {
-    //             println!("太小了");
-    //             println!("--------------");
-    //         },
-    //         Ordering::Equal => {
-    //             println!("猜对了");
-    //             break;
-    //         },
-    //     }
-    // }
-    
+    let result = longest(&string1, string2);
+    println!("The longest string is {result}");
 }
+
+fn longest<'a>(x:&'a str,y:&'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    }else {
+        y
+    }
+}
+
