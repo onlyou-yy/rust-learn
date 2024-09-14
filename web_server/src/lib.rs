@@ -3,31 +3,45 @@ use std::{
     thread,
 };
 
-enum PoolCreationError {
+pub enum PoolCreationError {
     SizeErr(String),
 }
 
 pub struct ThreadPool {
     workers: Vec<Worker>,
-    sender: mpsc::Sender<Job>,
+    sender: mpsc::Sender<Message>,
 }
 
 type Job = Box<dyn FnOnce() + Send + 'static>;
 
+pub enum Message {
+    NewJob(Job),
+    Terminate,
+}
+
 pub struct Worker {
     id: usize,
-    thread: thread::JoinHandle<()>,
+    thread: Option<thread::JoinHandle<()>>,
 }
 
 impl Worker {
-    pub fn new(id: usize, receiver: Arc<Mutex<mpsc::Receiver<Job>>>) -> Worker {
-        let thread: thread::JoinHandle<()> = thread::spawn(move || loop {
-            // 调用 recv 会阻塞当前线程，所以如果还没有任务，其会等待直到有可用的任务
-            let job = receiver.lock().unwrap().recv().unwrap();
+    pub fn new(id: usize, receiver: Arc<Mutex<mpsc::Receiver<Message>>>) -> Worker {
+        let thread: thread::JoinHandle<()> = thread::spawn(move || {
+            loop {
+                // 调用 recv 会阻塞当前线程，所以如果还没有任务，其会等待直到有可用的任务
+                let message = receiver.lock().unwrap().recv().unwrap();
 
-            println!("Worder {id} got a job;executing");
-
-            job();
+                match message {
+                    Message::NewJob(job) => {
+                        println!("Worker {id} got a job;executing");
+                        job();
+                    }
+                    Message::Terminate => {
+                        println!("Worker {id} disconnected; shutting down.");
+                        break;
+                    }
+                }
+            }
         });
         // 不能像下面这样写
         // 因为while let（if let 和 match）直到相关的代码块结束都不会丢弃临时值,
@@ -40,7 +54,30 @@ impl Worker {
         //         job();
         //     }
         // });
-        Worker { id, thread }
+        Worker {
+            id,
+            thread: Some(thread),
+        }
+    }
+}
+
+impl Drop for ThreadPool {
+    fn drop(&mut self) {
+        println!("Sending terminate message to all workers.");
+
+        for _ in &mut self.workers {
+            self.sender.send(Message::Terminate).unwrap();
+        }
+
+        println!("Shutting down all workers.");
+
+        for worker in &mut self.workers {
+            println!("shutting down worker {}", worker.id);
+
+            if let Some(thread) = worker.thread.take() {
+                thread.join().unwrap();
+            }
+        }
     }
 }
 
@@ -83,6 +120,6 @@ impl ThreadPool {
         F: FnOnce() + Send + 'static,
     {
         let job = Box::new(f);
-        self.sender.send(job).unwrap();
+        self.sender.send(Message::NewJob(job)).unwrap();
     }
 }
