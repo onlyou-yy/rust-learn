@@ -62,9 +62,16 @@ impl Worker {
 }
 
 impl Drop for ThreadPool {
+    // 当程序出错时会运行这里
     fn drop(&mut self) {
         println!("Sending terminate message to all workers.");
 
+        /**
+         * 先给每个消费者发送一个停机消息，
+         * 因为只有一个消费者，所以当一个消息被worker被接收后，其他的worker并不能接受到消息，
+         * 下面两个循环不写在一起的原因是，如果写到一起，此时如果worker0正在处理请求，消息过来了，worker0就不能接受到信息
+         * 而被其他worker收到终止消息并停止。我们会一直等待第一个 worker 结束，不过它永远也不会结束因为第二个线程接收了终止消息。死锁！
+         */
         for _ in &mut self.workers {
             self.sender.send(Message::Terminate).unwrap();
         }
