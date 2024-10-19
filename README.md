@@ -8,6 +8,8 @@
 - [过程宏练习项目](https://github.com/dtolnay/proc-macro-workshop) [Rust 过程宏开发实战系列](https://www.bilibili.com/video/BV16A411N7m2/?spm_id_from=333.337.search-card.all.click&vd_source=41ed998ac767425fb616fd9071ce9682)
 - [Rust 宏小册](https://zjp-cn.github.io/tlborm/#rust-宏小册)
 - [http://blog.ideawand.com](http://blog.ideawand.com)
+- [Rust 语言圣经](https://course.rs/about-book.html)
+- [Rusty Book(锈书)](https://rusty.course.rs/awesome-daily-dev.html)
 
 ### 宏
 
