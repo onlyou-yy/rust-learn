@@ -1,10 +1,3 @@
-use std::{
-    fs,
-    io::{BufRead, BufReader, Write},
-    net::{TcpListener, TcpStream},
-    thread,
-    time::Duration,
-};
 use web_server::ThreadPool;
 
 fn main() {
@@ -18,12 +11,6 @@ fn main() {
         });
     }
 }
-
-struct Obj {
-    static struct Obj1{
-    }
-}
-
 
 // fn handle_connection(mut stream:TcpStream) {
 //     let buf_reader = BufReader::new(&mut stream);

@@ -1,13 +1,15 @@
-use std::thread;
-use std::time::Duration;
+use std::{future::Future};
 
-fn main() {
-    let handle = thread::spawn(|| {
-        println!("thread start run");
-        thread::sleep(Duration::from_secs(5));
-        println!("thread end run");
-    });
-
-    handle.join().unwrap();
-    println!("end");
+async fn foo() -> Result<u8, String> {
+    Ok(1)
+}
+async fn bar() -> Result<u8, String> {
+    Ok(1)
+}
+pub fn main() {
+    let fut = async {
+        foo().await?;
+        bar().await?;
+        Ok::<_,String>(())
+    };
 }
