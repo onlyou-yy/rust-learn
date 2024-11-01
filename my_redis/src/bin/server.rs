@@ -44,12 +44,14 @@ async fn process(socket: TcpStream,db:Db) {
     while let Some(frame) = connection.read_frame().await.unwrap() {
         let response = match Command::from_frame(frame).unwrap() {
             Set(cmd) => {
+                println!("Set data");
                 // 值被存储为 `Vec<u8>` 的形式
                 let mut db = db.lock().unwrap();
                 db.insert(cmd.key().to_string(), Bytes::from(cmd.value().to_vec()));
                 Frame::Simple("OK".to_string())
             }
             Get(cmd) => {
+                println!("Get data");
                 let db = db.lock().unwrap();
                 if let Some(value) = db.get(cmd.key()) {
                     // `Frame::Bulk` 期待数据的类型是 `Bytes`， 该类型会在后面章节讲解，
