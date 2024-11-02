@@ -1,0 +1,21 @@
+[package]
+name = "web_service"
+version = "0.1.0"
+edition = "2021"
+# cargo run -p web_service --bin teacher-service
+# 不使用 --bin 指定要运行的bin时运行 teacher-service
+default-run = "teacher-service"
+
+
+[dependencies]
+actix-web = "3"
+actix-rt = "1.1.1"
+serde = {version = "1.0.132",features = ["derive"]}
+chrono = {version = "0.4.19",features = ["serde"]}
+
+[[bin]]
+name = "server1"
+
+
+[[bin]]
+name = "teacher-service"
