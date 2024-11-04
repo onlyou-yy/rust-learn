@@ -1,0 +1,119 @@
+{
+  // 使用 IntelliSense 了解相关属性。 
+  // 悬停以查看现有属性的描述。
+  // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug executable 'server1'",
+      "cargo": {
+        "args": [
+          "build",
+          "--bin=server1",
+          "--package=web_service"
+        ],
+        "filter": {
+          "name": "server1",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug unit tests in executable 'server1'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--bin=server1",
+          "--package=web_service"
+        ],
+        "filter": {
+          "name": "server1",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug executable 'teacher-service'",
+      "cargo": {
+        "args": [
+          "build",
+          "--bin=teacher-service",
+          "--package=web_service"
+        ],
+        "filter": {
+          "name": "teacher-service",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug unit tests in executable 'teacher-service'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--bin=teacher-service",
+          "--package=web_service"
+        ],
+        "filter": {
+          "name": "teacher-service",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug executable 'web_service'",
+      "cargo": {
+        "args": [
+          "build",
+          "--bin=web_service",
+          "--package=web_service"
+        ],
+        "filter": {
+          "name": "web_service",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug unit tests in executable 'web_service'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--bin=web_service",
+          "--package=web_service"
+        ],
+        "filter": {
+          "name": "web_service",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
