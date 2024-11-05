@@ -2,9 +2,8 @@ use crate::models::*;
 use sqlx::MySqlPool;
 
 pub async fn get_courses_for_teacher_db(pool: &MySqlPool, teacher_id: i32) -> Vec<Course> {
-    let rows = sqlx::query_as!(
-        Course,
-        r#"SELECT id as "id!", teacher_id, name, time
+    let rows = sqlx::query!(
+        r#"SELECT id, teacher_id, name, time
         FROM course
         WHERE teacher_id = ?"#,
         teacher_id
@@ -13,12 +12,18 @@ pub async fn get_courses_for_teacher_db(pool: &MySqlPool, teacher_id: i32) -> Ve
     .await
     .unwrap();
 
-    rows
+    rows.iter()
+        .map(|r| Course {
+            id: Some(r.id),
+            teacher_id: r.teacher_id,
+            name: r.name.clone(),
+            time: Some(r.time.unwrap()),
+        })
+        .collect()
 }
 
 pub async fn get_course_details_db(pool: &MySqlPool, teacher_id: i32, course_id: i32) -> Course {
-    let row = sqlx::query_as!(
-        Course,
+    let row = sqlx::query!(
         r#"SELECT id, teacher_id, name, time
             FROM course
             WHERE teacher_id = ? and id = ?"#,
@@ -29,29 +34,40 @@ pub async fn get_course_details_db(pool: &MySqlPool, teacher_id: i32, course_id:
     .await
     .unwrap();
 
-    row
+    Course {
+        id: Some(row.id),
+        teacher_id: row.teacher_id,
+        name: row.name.clone(),
+        time: Some(row.time.unwrap()),
+    }
 }
 
 pub async fn post_new_course_db(pool: &MySqlPool, new_course: Course) -> Course {
-    let _insert_res = sqlx::query_as!(
-        Course,
-        r#"INSERT INTO course (id, teacher_id, name)
-            VALUES (?,?,?)"#,
-        new_course.id,
+    println!("insert_res data: {new_course:#?}");
+    let insert_res = sqlx::query!(
+        r#"INSERT INTO course (teacher_id, name)
+            VALUES (?,?)"#,
         new_course.teacher_id,
         new_course.name,
     )
-    .fetch_one(pool)
+    .execute(pool)
     .await
     .unwrap();
 
-    let row = sqlx::query_as!(
-        Course,
-        "SELECT id,teacher_id,name,time FROM course WHERE id=@@IDENTITY"
+    println!("insert_res: {insert_res:#?}");
+
+    let row = sqlx::query!(
+        "SELECT id,teacher_id,name,time FROM course WHERE id=?",
+        insert_res.last_insert_id()
     )
     .fetch_one(pool)
     .await
     .unwrap();
 
-    row
+    Course {
+        id: Some(row.id),
+        teacher_id: row.teacher_id,
+        name: row.name.clone(),
+        time: Some(row.time.unwrap()),
+    }
 }

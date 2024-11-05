@@ -4,8 +4,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Course {
+    pub id: Option<u64>,
     pub teacher_id: i32,
-    pub id: u64,
     pub name: String,
     pub time: Option<DateTime<Utc>>,
 }

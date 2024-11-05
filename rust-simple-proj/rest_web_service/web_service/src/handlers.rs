@@ -19,8 +19,8 @@ pub async fn new_course(
     app_state: web::Data<AppState>,
 ) -> HttpResponse {
     println!("Received new course");
-    let course = post_new_course_db(&app_state.db, new_course_info.into());
-    HttpResponse::Ok().json("Course added")
+    let course = post_new_course_db(&app_state.db, new_course_info.into()).await;
+    HttpResponse::Ok().json(course)
 }
 
 pub async fn get_course_for_teacher(
@@ -72,7 +72,7 @@ mod tests {
         let course = web::Json(Course {
             teacher_id: 1,
             name: "Test course".into(),
-            id: 3,
+            id: Some(3),
             time: None,
         });
 
