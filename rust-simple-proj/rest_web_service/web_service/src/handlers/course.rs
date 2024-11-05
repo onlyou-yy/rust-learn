@@ -5,7 +5,7 @@ use crate::{
         delete_course_db, get_course_details_db, get_courses_for_teacher_db, post_new_course_db,
         update_course_details_db,
     },
-    error::MyError,
+    errors::MyError,
     models::course::{CreateCourse, UpdateCourse},
     state::AppState,
 };

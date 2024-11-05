@@ -1,5 +1,5 @@
 use crate::{
-    error::MyError,
+    errors::MyError,
     models::course::{Course, CreateCourse, UpdateCourse},
 };
 use sqlx::MySqlPool;

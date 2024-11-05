@@ -2,7 +2,7 @@ use actix_web::web;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-use crate::error::MyError;
+use crate::errors::MyError;
 
 // Deserialize 将 json 转化成 Course
 // Serialize 将 Course 转成 json
