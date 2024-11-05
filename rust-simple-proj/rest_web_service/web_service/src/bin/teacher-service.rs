@@ -8,6 +8,8 @@ use state::AppState;
 
 #[path = "../db_access.rs"]
 mod db_access;
+#[path = "../error.rs"]
+mod error;
 #[path = "../handlers.rs"]
 mod handlers;
 #[path = "../models.rs"]
@@ -21,6 +23,7 @@ mod state;
 async fn main() -> io::Result<()> {
     dotenv().ok();
 
+    // 如果提示环境变量没找到就进入到 web_service 目录再运行cargo run
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL 没有在 .env 中设置");
 
     let db_pool = MySqlPoolOptions::new()
