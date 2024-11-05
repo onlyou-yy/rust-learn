@@ -6,13 +6,13 @@ use routers::{courses_routes, general_routes};
 use sqlx::mysql::MySqlPoolOptions;
 use state::AppState;
 
-#[path = "../db_access.rs"]
+#[path = "../db_access/mod.rs"]
 mod db_access;
 #[path = "../error.rs"]
 mod error;
-#[path = "../handlers.rs"]
+#[path = "../handlers/mod.rs"]
 mod handlers;
-#[path = "../models.rs"]
+#[path = "../models/mod.rs"]
 mod models;
 #[path = "../routes.rs"]
 mod routers;

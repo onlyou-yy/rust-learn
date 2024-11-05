@@ -37,8 +37,8 @@ impl MyError {
 impl actix_web::error::ResponseError for MyError {
     fn status_code(&self) -> StatusCode {
         match self {
-            MyError::DBError(msg) | MyError::ActixError(msg) => StatusCode::INTERNAL_SERVER_ERROR,
-            MyError::NotFound(msg) => StatusCode::NOT_FOUND,
+            MyError::DBError(_) | MyError::ActixError(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            MyError::NotFound(_) => StatusCode::NOT_FOUND,
         }
     }
 
